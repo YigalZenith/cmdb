@@ -1,0 +1,27 @@
+{% extends "swan/push_zabbix.html" %}
+
+{% block title %}
+<h5> 执行命令 </h5>
+{% endblock title %}
+
+{% block action %}
+<a value="/swan/execute_command/?uuid={{ i.uuid }}" type="button" class="btn btn-xs btn-warning iframe">执行命令</a>
+{% endblock action%}
+
+{% block js %}
+<script>
+    $(document).ready(function() {
+        $(".iframe").on('click', function(){
+            var url= $(this).attr("value");
+            layer.open({
+              type: 2,
+              title: '执行命令',
+              area: ['800px', '400px'],
+              fixed: false, //不固定
+              maxmin: true,
+              content: url
+            });
+        });
+    });
+</script>
+{% endblock js%}

@@ -1,0 +1,111 @@
+{% extends 'assets/base.html' %}
+{% block content %}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>项目上线历史列表 | List IDC.</h2>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5> 项目上线历史列表 </h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user"></ul>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="ibox-content">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center">项目名称</th>
+                            <th class="text-center">地址</th>
+                            <th class="text-center">MD5</th>
+                            <th class="text-center">上线时间</th>
+                            <th class="text-center">上线人员</th>
+                            <th class="text-center">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in contacts.object_list %}
+                            <tr>
+                                <td class="text-center">
+                                     <a type="button" href="/swan/project_history_filter/?pid={{i.project.id}}" class="btn btn-info btn-xs">{{ i.project.service_name }}</a>
+                                </td>
+                                <td class="text-center">{{ i.URL }}</td>
+                                <td class="text-center">{{ i.version }}</td>
+                                <td class="text-center">{{ i.online_time }}</td>
+	 							<td class="text-center">{{ i.person }}</td>
+                                <td class="text-center">
+                                    <div class="btn-group" data-toggle="buttons">
+                                        <a value="/swan/project_update/?uuid={{i.uuid}}&jiramd5={{i.version}}&project={{ i.project.service_name }}" type="button" class="btn btn-xs btn-success iframe" data-toggle="modal">上传</a>
+                                        <a value="/swan/project_rollback/?uuid={{i.uuid}}" type="button" class="btn btn-xs btn-warning iframe" data-toggle="modal">回滚</a>
+                                        <a href="/swan/project_remove/?uuid={{ i.uuid }}" class="btn btn-xs btn-danger" data-toggle="modal">删除</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+				<div class="row">
+				    <div class="col-sm-6">
+				        <div id="host_list">
+				            <a value="/swan/project_upload/" type="button" class="btn btn-info iframe">添加</a>
+				            {% block reback %}{% endblock %}
+                        </div>
+				    </div>
+				    {% if search %}
+				        {% include 'assets/paginator_search.html' %}
+				    {% else %}
+				        {% include 'assets/paginator.html' %}
+				    {% endif %}
+				    
+				</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(".iframe").on('click', function(){
+        var url= $(this).attr("value");
+        index = $.layer({
+            type: 2,
+            title: '添加项目记录',
+            maxmin: true,
+            shift: 'top',
+            border: [2, 0.3, '#1AB394'],
+            shade: [0.5, '#000000'],
+            shadeClose: true,
+            area : ['1000px' , '600px'],
+            iframe: {src: url},
+            close: function(){
+                location.replace(location.href);
+            },
+            end: function(){ 
+    			location.replace(location.href);
+    		}
+        });
+
+    });
+</script>
+{% endblock content %}
+
+
+
+
+

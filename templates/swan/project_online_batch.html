@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{{hostname}}上线日志</title>
+		<style type="text/css">
+		html,body{background:#000; color:#090;}
+		</style>
+	</head>
+	
+	<body>
+	<div style="margin-top:10px;margin-left:10px;" id='log_id'>
+        {% for k,v in results.items %}
+            <h1>主机{{ k }}开始</h1>
+			<p id='log'>{{v| linebreaks}}</p>
+            <h1>主机{{ k }}结束</h1>
+
+        {% endfor %}
+	</div>
+</body>
+
+</html>

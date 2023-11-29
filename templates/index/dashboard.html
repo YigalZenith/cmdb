@@ -1,0 +1,113 @@
+{% extends 'index/base.html' %}
+{% load humanize %}
+{% block content %}
+<div class="wrapper wrapper-content">
+    <div class="row">
+        {% include "ztree/ztree_js.html" %}
+        <div class="col-lg-3">
+            {% if request.user.is_superuser %}
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-info pull-right">Hosts</span>
+                    <h5>主机总数</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins"><a href="/assets/host_list/">{{ hosts }}</a></h1>
+                    <div class="stat-percent font-bold text-info"> <i class="fa fa-level-up"></i></div>
+                    <small>All host</small>
+                </div>
+            </div>
+            {% endif %}
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-success pull-right">Users</span>
+                    <h5>用户总数</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins"><a href="/admin/auth/user/">{{ users }}</a></h1>
+                    <div class="stat-percent font-bold text-success">{{ percent_user }} <i class="fa fa-bolt"></i></div>
+                    <small>All user</small>
+                </div>
+            </div>
+
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-success pull-right">count</span>
+                    <h5>当天项目发布统计</h5>
+                </div>
+                {% for k,v in today_online_data.items %}
+                <div class="ibox-content">
+{#                    <h5 class="no-margins">{{ k }}发布:</h5>#}
+                    <div class="stat-percent font-bold text-success">{{ v.count }} 次</div>
+                    <small><a href="{% url 'filter_online_log' k %}?date={{ stop_time| date:"Y-m-d" }}">{{ k }} </a></small>
+{#                    <small><a href="#">{{ k }} </a></small>#}
+                </div>
+                {% endfor %}
+            </div>
+
+        </div>
+        <div class="col-lg-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-danger pull-right">Problems</span>
+                    <h5>故障总数</h5>
+                </div>
+                <div class="ibox-content">
+
+                    <div class="stat-percent font-bold text-navy"> <i class="fa fa-level-up"></i></div>
+                    <small>All Problems</small>
+                </div>
+            </div>
+            {% if request.user.is_superuser %}
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-info pull-right">Project</span>
+                    <h5>项目数</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins"><a href="{% url 'project_list' %}">{{ project }}</a></h1>
+
+                    <div class="stat-percent font-bold text-navy"> <i class="fa fa-level-up"></i></div>
+                    <small>All Projects</small>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-info pull-right">swan</span>
+                    <h5>发布日志</h5>
+                </div>
+                <div class="ibox-content inspinia-timeline">
+                    {% for i in swan_onlinelogs %}
+                    <div class="timeline-item">
+                        <div class="row">
+                            <div class="col-xs-3 date">
+                                <i class="fa fa-pied-piper-alt"></i>
+                                <small class="text-navy">{{ i.optime|naturaltime }}</small>
+                            </div>
+                            <div class="col-xs-7 content no-top-border">
+                                <p class="m-b-xs"><strong><span class="label label-danger">{{ i.username }}</span> </strong></p>
+                                {% if i.tag == 1 %}
+                                    <p>上线项目: {{ i.pname }}</p>
+                                {% elif i.tag == 2 %}
+                                    <p>执行命令: {{ i.command }}</p>
+                                {% elif i.tag == 3 %}
+                                    <p>查看日志: {{ i.command }}</p>
+                                {% endif %}
+                                <p>操作主机: {{ i.hname }}</p>
+                                <p>{{ i.optime }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock  %}
+

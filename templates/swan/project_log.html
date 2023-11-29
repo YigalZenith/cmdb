@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{{hostname}}上线日志</title>
+		<style type="text/css">
+		html,body{background:#000; color:#090;}
+		</style>
+	</head>
+	
+	<body>
+	<div style="margin-top:10px;margin-left:10px;" id='log_id'>
+			<p id='log'>{{result1 | linebreaks}}</p>
+	</div>
+
+	<script src="/static/js/jquery.min.js"></script>
+	<script>
+        pid = "{{project}}"
+        hid = "{{hostname}}"
+        linenum = {{linenum}}
+		
+		function myalert(){
+		    alert("ajax alert error!!!")
+		}
+
+		function get_log_handle(){
+			$.ajax({
+				url:"/swan/project_log_handle/",
+				data:{'pid':pid,'hid':hid,'linenum':linenum},
+				type:'GET',
+				success:function(callback){
+                    callback = jQuery.parseJSON(callback);
+					if (callback[1] === "no update"){
+                        console.log(callback[1])
+                    }else{
+                        $("#log_id").append("<p>"+callback[1]+"</p>");
+						var height = document.getElementById('log_id').scrollHeight;
+						$("#log_id").scrollTop(height);
+						window.scrollTo(0,document.body.scrollHeight);
+						window.linenum = callback[0];
+                        console.log(window.linenum);
+                        console.log(callback[1]);
+                    }
+				},
+                error:function(){
+				   myalert();
+				   clearInterval(t);
+                }
+			})                
+		}
+
+		var t = setInterval('get_log_handle()',2000)
+		 
+	</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<div class="panel-options">
+    <ul class="nav nav-tabs">
+        <li class="push_zabbix"><a href="/swan/push_zabbix/" class="text-center"><i class="fa fa-laptop"></i> Zabbix </a></li>
+        <li class="push_cmd"><a href="/swan/push_cmd/" class="text-center"><i class="fa fa-bar-chart-o"></i> Commands </a></li>
+        <li class="push_module"><a href="/swan/push_module/" class="text-center"><i class="glyphicon glyphicon-compressed"></i> Modules </a></li>
+        <li style="float: right">
+            <form id="search_form" method="get" action="" class="pull-right mail-search">
+                <div class="col-sm-1 test_width" style="width: auto">
+                    <label>
+                        <select name="change_business" class="form-control m-b" onchange="change_info()">
+                            <option value="all">所有项目</option>
+                            {% for i in server_type %}
+                            <option value="{{i.service_name}}"> {{ i }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                </div>
+
+                <div class="input-group">
+                    <input type="text" class="form-control input-sm" id="search_input" name="keyword" placeholder="Search">
+                    <input type="text" style="display: none">
+                    <div class="input-group-btn">
+                        <button id='search_btn' type="button" class="btn btn-sm btn-primary" onclick="log_search()">
+                            Search
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </li>
+    </ul>
+</div>
+
+<!-- 右侧菜单栏控制 -->
+<script type="text/javascript">
+    var two = document.location.pathname.split("/")[2];
+    if (str === "swan"){
+        $("." + str).addClass('active');
+    }
+    $("." + two).addClass('active');
+
+    function change_info(){
+        $.ajax({
+            type: "GET",
+            url: "/swan/change_project_ajax/",
+            data: $("#asset_form").serialize(),
+            success: function (data) {
+                $("#replace").html(data);
+            }
+        });
+    }
+</script>

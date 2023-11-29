@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>塔读运维自动化 | Login</title>
+
+    {% include 'index/link_css.html' %}
+    {% include 'index/script.html' %}
+
+</head>
+
+<body class="gray-bg">
+
+    <div class="middle-box text-center loginscreen  animated fadeInDown">
+        <div>
+            <div>
+
+                <div class="col-md-12 column" style="padding-bottom: 15px">
+                    <img  src="/static/img/logo.jpg" width="140" height="140" class="img-circle" />
+                </div>
+
+            </div>
+
+            <h3>欢迎使用塔读运维自动化管理系统</h3>
+            <p>
+                <!--Continually expanded and constantly improved Inspinia Admin Them (IN+)-->
+            </p>
+            <p>Login in. To see it in action.</p>
+            
+            {% if password_is_wrong %}
+			    <div class="alert alert-error">
+			        <button type="button" class="close" data-dismiss="alert">×</button>
+			        <h4>错误!</h4>用户名或密码错误
+			    </div>
+			{% endif %} 
+            
+            <form class="m-t" role="form" method="post" action="">{% csrf_token %}
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="username" id="id_username" name='username' required="">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" id="id_password" name="password"  placeholder="Password" required="">
+                </div>
+                <button type="submit" class="btn btn-primary block full-width m-b">Login</button>
+                <input type="hidden" name="next" value="{{ next }}" />
+                <a href="/accounts/resetpass/"><small>Forgot password?</small></a>
+                <p class="text-muted text-center"><small>Do not have an account?</small></p>
+            </form>
+            <p class="m-t"> <small>Inspinia we app framework base on Bootstrap 3 &copy; 2014</small> </p>
+        </div>
+    </div>
+
+</body>
+
+</html>

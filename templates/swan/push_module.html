@@ -1,0 +1,9 @@
+{% extends "swan/push_zabbix.html" %}
+
+{% block title %}
+<h5> 推送模块 </h5>
+{% endblock title %}
+
+{% block action %}
+<a value="/swan/push_module/?uuid={{ i.uuid }}" type="button" class="btn btn-xs btn-warning iframe">推送模块</a>
+{% endblock action%}

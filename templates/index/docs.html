@@ -1,0 +1,48 @@
+{% extends 'assets/base.html' %}
+{% block content %}
+<div style="text-align: center;font-style: italic" >
+    <h1>运维规范</h1>
+</div>
+
+<div style="text-align: center;" >
+   <textarea style="width: 800px;height: 550px;margin-top: 20px;font-size: large;background-color: #0a0a0a;color: #00dd1c">
+
+        业务上线前：
+            1.采购：按合同录采购表(IP和SN字段为空)
+            2.装机：安装操作系统,更新网段表(暂用svn)
+            3.上架：更新主机列表(添加虚拟机前必须存在对应的宿主机),补全采购表中的IP和SN字段
+            4.优化：安装salt并推送优化和监控
+
+       注：采购表和服务器表都要更新,设备型号/SN
+
+       业务上线后：
+            更新业务图(暂用svn)
+
+        外网映射：
+            更新网络表(暂用svn)
+
+        上线流程：
+            1.进入自动化运维--->项目管理--->项目记录页面
+                1）点击添加按钮，填入上线信息
+                2）单击上传按钮，上传apk包到90或188
+            2.进入自动化运维--->项目管理--->项目发布页面
+                1）筛选需要上线的项目
+                2）单击日志按钮
+                3）单击上线按钮（需要等待一段时间）
+
+       机器分类：
+            老一批： 2001-1-1   采购表无供货商信息
+            老二批： 有采购日期  采购表无供货商信息
+            新机器： 有采购日期  采购表有供货商信息
+            虚拟机： 2002-2-2   采购表无记录
+
+
+   </textarea>
+</div>
+
+{% endblock content %}
+
+
+
+
+

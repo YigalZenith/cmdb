@@ -1,0 +1,98 @@
+<SCRIPT type="text/javascript">
+
+        var setting = {
+            data: {
+                simpleData: {
+                    enable: true,
+                }
+            },
+            callback: {
+                beforeClick: beforeClick,
+                onExpand:onExpand,
+                onCollapse:onCollapse,
+                onClick:onClick,
+            }
+        };
+
+        var zNodes =[
+            { id:'-99', pId:'0', name:"默认树", root:true, open:true, icon:"/static/img/zTreeStyle/img/diy/1_open.png"},
+            {% for i in zdata %}
+                { id: '{{ i.id }}', pId: '{{ i.pId }}', name:"{{ i.name|safe }}",isParent:"{{ i.isParent }}",uuid:"{{ i.uuid }}", icon:"{{ i.icon }}"},
+            {% endfor %}
+            ];
+
+        function beforeClick(treeId, treeNode, clickFlag) {
+               var str = treeNode.uuid;
+               if(str){
+                   location.href = "/ztree_host_detail/?uuid=" + str ;
+               }
+        }
+
+        function onExpand(event, treeId, treeNode) {
+            var cookie = $.cookie("z_tree");
+
+            var z_tree = null;
+            if(cookie){
+                z_tree = JSON.parse(cookie);
+            }
+
+            if(!z_tree){
+                z_tree = new Array();
+            }
+
+            if(treeNode.isParent){
+                if(jQuery.inArray(treeNode.id, z_tree)<0){
+{#                    z_tree = new Array();#}
+                    z_tree.push(treeNode.id);
+                }
+            }
+            $.cookie("z_tree", JSON.stringify(z_tree), { expires: 31536000 });
+		}
+
+        function onCollapse(event, treeId, treeNode) {
+            var cookie = $.cookie("z_tree");
+            z_tree =  jQuery.parseJSON(cookie);
+            z_tree2 = new Array();
+            if(treeNode.isParent){
+                if(jQuery.inArray(treeNode.id, z_tree) != -1){
+                    z_tree.splice(z_tree.indexOf(treeNode.id),1);
+                }
+            }
+            $.cookie("z_tree", JSON.stringify(z_tree), { expires: 31536000 });
+            $.cookie("z_tree2", JSON.stringify(z_tree2), { expires: 31536000 });
+		}
+
+        function onClick(event, treeId, treeNode) {
+            z_tree2 = new Array();
+            if(!treeNode.isParent){
+                if(jQuery.inArray(treeNode.id, z_tree2)<0){
+                    z_tree2.push(treeNode.id);
+                }
+            }
+            $.cookie("z_tree2", JSON.stringify(z_tree2), { expires: 31536000 });
+        }
+
+        $(document).ready(function(){
+            $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+
+            var cookie = $.cookie("z_tree");
+            var cookie2 = $.cookie("z_tree2");
+            if(cookie){
+                z_tree = jQuery.parseJSON(cookie);
+                for(var i=0; i< z_tree.length; i++){
+                    var node = treeObj.getNodeByParam('id', z_tree[i]);
+                    treeObj.expandNode(node, true)
+                }
+            }
+            if(cookie2){
+                z_tree2 = jQuery.parseJSON(cookie2);
+                for(var i=0; i< z_tree2.length; i++){
+                    var node2 = treeObj.getNodeByParam('id', z_tree2[i]);
+                    treeObj.selectNode(node2, true)
+                }
+            }
+        });
+
+
+</script>

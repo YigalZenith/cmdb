@@ -1,0 +1,144 @@
+{% extends 'index/base.html' %}
+{% block content %}
+
+<style>
+    .test_width{ width:130px; }
+</style>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="ibox float-e-margins">
+            <div id="edit_result">
+                <div class="ibox-title">
+                    <h5> 主机详细信息列表 <span style="color:red">共计:{{server_list_count}}台  物理机:{{ physics }}  虚拟机: {{ vms }}台</span></h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user"></ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <form id="asset_form">
+{#                        {% csrf_token %}#}
+                        
+                        <div class="col-sm-1 test_width">
+                            <label>
+                                <select name="change_business" class="form-control m-b" onchange="change_info();">
+                                    <option value="all">所有项目</option>
+                                    {% for i in server_type %}
+                                    <option value="{{i.service_name}}"> {{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+                        </div>
+                        
+                        <div class="col-sm-3">
+                            <div class="input-group">
+                                <input type="text" class="form-control m-b" id="search_input" name="keyword" placeholder="Search">
+                                <input type="text" style="display: none">
+                                <div class="input-group-btn">
+                                    <button type="button" href="/swan/change_project_ajax/?search=true" name="search" class="btn btn-xm btn-primary search_btn" onclick="return false">
+                                        搜索
+                                    </button>
+                                </div>                          
+                            </div>
+                        </div>
+                        
+                        <div id="download"></div>
+                        <div id="replace">
+                            {% include 'swan/project_info_ajax.html' %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/layer2/layer2.min.js"></script>
+<script type="text/javascript">
+    function choice(obj,uuid){
+    	$(obj).toggleClass('btn-warning');
+    	var name = $(obj).text();
+    	var new_val = "/swan/project_log/?uuid=" + uuid + "&project=" + name
+    	$('.'+uuid).attr("href",new_val)
+    }
+    function changecolor(obj){
+    	$(obj).removeClass('btn-primary');
+    	console.log("add")
+    }
+
+    $(document).ready(function() {
+        $('#batch_online').click(function () {
+            var ids = getids();
+            if (ids == ''){
+                alert("请至少选择一行!");
+                return false;
+            }
+            if (confirm("确定批量上线？")) {
+                var url = "/swan/project_online_batch/?ids=" + ids;
+                var index = layer.open({
+                  type: 2,
+                  content: url,
+                  area: ['50%', '50%'],
+                  maxmin: true
+                });
+                layer.full(index);
+            }
+        });
+
+        $(".iframe").on('click', function(){
+            var url= $(this).attr("value");
+            layer.open({
+              type: 2,
+              title: '执行命令',
+              area: ['800px', '400px'],
+              fixed: false, //不固定
+              maxmin: true,
+              content: url
+            });
+        });
+    });
+
+    $("#search_input").keydown(function(e){
+        if(e.keyCode==13){
+            change_info()
+            }
+    });
+
+    $('.search_btn').unbind('click').bind('click',function(){
+        var url= $(this).attr("href");
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: $("#asset_form").serialize(),
+            success: function (data) {
+                $("#replace").html(data);
+            }
+        });
+    });
+
+    function change_info(){
+        // var data = $("#asset_form").serialize();
+        // location.href = "/assets/change_info_ajax/?" + data;
+        $.ajax({
+            type: "GET",
+            url: "/swan/change_project_ajax/",
+            data: $("#asset_form").serialize(),
+            success: function (data) {
+                $("#replace").html(data);
+            }
+        });
+        alert("请确认项目 "+$("select option:selected").val()+" 的资源和配置文件已上线！！！")
+    }
+</script>
+
+{% endblock  %}
+

@@ -1,0 +1,122 @@
+{% extends 'index/base.html' %}
+{% block content %}
+{% load pagination_tags %}
+{% load business_tag %}
+<style>
+    .test_width{ width:130px; }
+</style>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="ibox float-e-margins">
+            <div id="edit_result">
+                <div class="ibox-title">
+                    <h5> 主机详细信息列表 <span style="color:red">总共有:{{server_list_count}}台  物理机:{{ physics }}  虚拟机: {{ vms }}台</span></h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user"></ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <form id="asset_form">
+{#                        {% csrf_token %}#}
+                        <div class="col-sm-1 test_width" style="padding-left: 0px">
+                            <label>
+                                <select name="change_idc" class="form-control m-b" onchange="change_info()">
+                                    <option value="">所有机房</option>
+                                    {% for i in idcs %}
+                                        <option value="{{i.name}}"> {{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+                        </div>
+
+                        <div class="col-sm-1 test_width" style="padding-left: 0px">
+                            <label>
+                                <select name="change_dtype" class="form-control m-b" onchange="change_info()">
+                                    <option value="">设备类型</option>
+                                    {% for i in  dtypes %}
+                                        <option value="{{ i.0}}"> {{ i.1}}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+                        </div>
+
+                        <div class="col-sm-1 test_width">
+                            <label>
+                                <select name="change_business" class="form-control m-b" onchange="change_info()">
+                                    <option value="all">所有项目</option>
+                                    {% for i in server_type %}
+                                    <option value="{{i.service_name}}"> {{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+                        </div>
+
+                         <div class="col-sm-1 test_width">
+                             <label>
+                                 <select name="change_status" class="form-control m-b" onchange="change_info()">
+                                     <option value="">所有状态</option>
+                                     {% for i in server_status %}
+                                     <option value="{{ i.0 }}"> {{ i.1 }}</option>
+                                     {% endfor %}
+                                 </select>
+                             </label>
+                         </div>
+
+                        <div class="col-sm-1 test_width">
+                            <label>
+                                <select name="change_type" class="form-control m-b" onchange="change_info()">
+                                    <option value="">主机类型</option>
+                                    <option value="0">物理机</option>
+                                    <option value="1">虚拟机</option>
+                                </select>
+                            </label>
+                        </div>
+                        
+                        <div class="col-sm-3">
+                            <div class="input-group">
+                                <input type="text" class="form-control m-b" id="search_input" name="keyword" placeholder="Search">
+                                <input type="text" style="display: none">
+                                <div class="input-group-btn">
+                                    <button type="button" href="/assets/change_info_ajax/?search=true" name="search" class="btn btn-xm btn-primary search_btn" onclick="return false">
+                                        搜索
+                                    </button>
+                                    
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-xm btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                          导出
+                                          <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                          <li><a href="/assets/change_info_ajax/?_search=true&name=pdf" class="search_btn_pdf" name="search" onclick="return false" >导出pdf</a></li>
+                                          <li><a href="/assets/change_info_ajax/?_search=true&name=excel" class="search_btn_pdf" name="search" onclick="return false" >导出excel</a></li>
+                                        </ul>
+                                    </div>                                   
+                                </div>                          
+                            </div>
+                        </div>
+                        
+                        <div id="download"></div>
+                        <div id="replace">
+                            {% include 'assets/host_info_ajax.html' %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock  %}
+

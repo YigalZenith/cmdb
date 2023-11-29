@@ -1,0 +1,63 @@
+{% extends 'index/base.html' %}
+{% load bootstrap %}
+{#{% load bootstrap3 %}#}
+
+
+{% block content %}
+
+<style>
+    .wrapper{margin-top:10px;}
+    .wanghui{margin-top:10px;}
+    #id_node li{
+       list-style-type :none;line-height:25px;
+    }
+</style>
+
+<div class="wrapper wrapper-content">
+            <div class="row animated fadeInRight">
+                <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="text-center float-e-margins p-md">
+                    <a href="#" class="btn btn-xs btn-primary" id="leftVersion">发布日志排版方式</a>
+                    </div>
+                    <div class="ibox-content" id="ibox-content">
+
+                        <div id="vertical-timeline" class="vertical-container dark-timeline center-orientation">
+                            {% for i in log_data %}
+                            <div class="vertical-timeline-block">
+                                <div class="vertical-timeline-icon navy-bg">
+                                    <i class="fa fa-user-md"></i>
+                                </div>
+
+                                <div class="vertical-timeline-content">
+                                    <h2>{{ i.username }}</h2>
+                                    <p>发布的项目: {{ i.pname }}</p>
+                                    <p>发布的主机: {{ i.hname }}</p>
+                                    <p>执行的命令: {{ i.command }}</p>
+                                    <span class="vertical-date">
+{#                                        Today <br/>#}
+                                        <small>{{ i.optime }}</small>
+                                    </span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    <script>
+        $(document).ready(function(){
+            $('#leftVersion').click(function(event) {
+                event.preventDefault();
+                $('#vertical-timeline').toggleClass('center-orientation');
+            });
+
+
+        });
+    </script>
+
+<!-- 右侧菜单栏控制 -->
+{% endblock content %}
